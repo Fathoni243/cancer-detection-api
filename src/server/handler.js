@@ -1,6 +1,7 @@
 const predictClassification = require("../service/inferenceService.js");
 const crypto = require("crypto");
 const storeData = require("../service/storeData.js");
+const getAllHistories = require("../service/getAllHistories.js");
 
 async function postPredictHandler(request, h) {
 	const { image } = request.payload;
@@ -17,7 +18,7 @@ async function postPredictHandler(request, h) {
 		createdAt: createdAt,
 	};
 
-	// await storeData(id, data);
+	await storeData(id, data);
 
 	const response = h.response({
 		status: "success",
@@ -28,4 +29,15 @@ async function postPredictHandler(request, h) {
 	return response;
 }
 
-module.exports = postPredictHandler;
+async function getAllHistoriesHandler(_request, h) {
+	histories = await getAllHistories();
+
+	const response = h.response({
+		status: "success",
+		data: histories,
+	});
+
+	return response;
+}
+
+module.exports = { postPredictHandler, getAllHistoriesHandler };
